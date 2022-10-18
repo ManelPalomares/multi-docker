@@ -16,4 +16,13 @@ after_success:
   - docker build -t manelpalomares/multi-nginx ./nginx
   - docker build -t manelpalomares/multi-server ./server
   - docker build -t manelpalomares/multi-worker ./worker
-
+  # Log in to the docker CLI
+  # Crear dos variables d'entorn en Travis en aquest cas, per fer la aplicació segura
+  # 1. DOCKER_ID
+  # 2. DOCKER_PASSWORD
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --pasword-stdin
+  # Take those images and push them to docker hub
+  - docker push manelpalomares/multi-client
+  - docker push manelpalomares/multi-nginx
+  - docker push manelpalomares/multi-server
+  - docker push manelpalomares/multi-worker
