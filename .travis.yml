@@ -1,0 +1,19 @@
+language: generic
+sudo: required
+services:
+  - docker
+  
+before_install:
+  - docker build -t manelpalomares/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run manelpalomares/react-test npm test -- --coverage
+  - docker run -e CI=true manelpalomares/react-test npm test
+
+
+after_success:
+  - docker build -t manelpalomares/multi-client ./client
+  - docker build -t manelpalomares/multi-nginx ./nginx
+  - docker build -t manelpalomares/multi-server ./server
+  - docker build -t manelpalomares/multi-worker ./worker
+
