@@ -1,3 +1,4 @@
+#Aquest arxiu s'ha d'executar en travis.org
 language: generic
 sudo: required
 services:
@@ -9,7 +10,6 @@ before_install:
 script:
   - docker run manelpalomares/react-test npm test -- --coverage
   - docker run -e CI=true manelpalomares/react-test npm test
-
 
 after_success:
   - docker build -t manelpalomares/multi-client ./client
@@ -26,3 +26,17 @@ after_success:
   - docker push manelpalomares/multi-nginx
   - docker push manelpalomares/multi-server
   - docker push manelpalomares/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: us-west-1
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name: elasticbeanstalk-us-west-1-numeros #ID
+  bucket_path: docker-multi
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+
+
